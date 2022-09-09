@@ -2,15 +2,18 @@
 
 ## Step 1 - Install a UNIX-based operating system
 
-<img src="media/1.png" width="35%" height="35%">
+<img src="media/1.png" width="45%" height="45%">
 
 I have installed Fedora OS. Forgot to make screenshots during the installation phase. 
 
 ## Step 2 - Install essential tools
 
-<img src="media/2.png" width="40%" height="40%">
-<img src="media/3.png" width="40%" height="40%">
+<img src="media/2.png" width="50%" height="50%">
+<img src="media/3.png" width="50%" height="50%">
+
+Installed zsh, oh-my-zsh, 
 
 ## Step 3 - Create a Git repository
 
-<img src="media/4.png" width="40%" height="40%">
+<img src="media/4.png" width="50%" height="50%">
+<img src="media/5.png" width="50%" height="50%">
