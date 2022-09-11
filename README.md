@@ -17,3 +17,7 @@ Installed zsh, oh-my-zsh,
 
 <img src="media/4.png" width="50%" height="50%">
 <img src="media/5.png" width="50%" height="50%">
+
+And here is the Makefile that compiles the project.
+
+<img src="media/6.png" width="50%" height="50%">
