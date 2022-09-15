@@ -1,23 +1,26 @@
-# Lab 0 at OOP
+# Labs at OOP
 
-## Step 1 - Install a UNIX-based operating system
+## Lab 0
 
-<img src="media/1.png" width="45%" height="45%">
+Introduction lab, on installing a `UNIX-like` operating system, getting to know `git`, `Makefile`.
 
-I have installed Fedora OS. Forgot to make screenshots during the installation phase. 
+## Lab 1
 
-## Step 2 - Install essential tools
+This lab is based around remembering the `Data Structures` concept. There are two ways to complete
+the lab, either the old-fashioned way to implement a menu with menu and tasks, or build a game in
+terminal. I have selected to build a game, named `Puzzle 15`.
 
-<img src="media/2.png" width="50%" height="50%">
-<img src="media/3.png" width="50%" height="50%">
 
-Installed zsh, oh-my-zsh, 
+## Building
 
-## Step 3 - Create a Git repository
+~~~~
+make
+~~~~
 
-<img src="media/4.png" width="50%" height="50%">
-<img src="media/5.png" width="50%" height="50%">
+## Launching
 
-And here is the Makefile that compiles the project.
+~~~~
+make run
+~~~~
 
-<img src="media/6.png" width="50%" height="50%">
+
