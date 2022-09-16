@@ -19,12 +19,12 @@ This a terminal style game of famous Puzzle 15.
 - Constraints to not get out of bounds
 - Random puzzle generator
 - Player position color highlight
+- Colorful output for the right cells
+- Restart feature
 
 ## TO DO
 
-- Colorful output
 - Implement file saving and loading from file
-- Restart feature
 - Do/undo feature
 - Algorithm that will solve the game
 - Settings option in the Menu
