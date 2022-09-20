@@ -9,21 +9,27 @@ void printMainMenu(void)
 	printf("1 - Start game\n");
 	printf("2 - Show controls\n");
 	printf("3 - Load game from file\n");
-	printf("4 - Exit game\n\n");
+	printf("4 - Delete save file\n");
+	printf("5 - Exit game\n\n");
 }
 
 void showControls(void)
 {
 	clearScreen();
+	applyColor("bgBlue");
 	printf("w - move empty cell up\n");
 	printf("s - move empty cell down\n");
 	printf("a - move empty cell left\n");
 	printf("d - move empty cell right\n");
-	printf("r - generate randomly the grid\n");
+	printf("u - undo last move\n");
+	printf("r - redo last move\n");
+	printf("g - generate randomly the grid\n");
 	printf("n - start from the beginning\n");
+	printf("v - save game to file\n");
+	printf("q - quit game to main menu\n");
+	applyColor("regular");
 
-	getchar(); // Catch '\n'
-	getchar(); // Wait for input
+	inputCatch();
 }
 
 char inputCatch(void)
