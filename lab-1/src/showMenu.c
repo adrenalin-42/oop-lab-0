@@ -25,3 +25,16 @@ void showControls(void)
 	getchar(); // Catch '\n'
 	getchar(); // Wait for input
 }
+
+char inputCatch(void)
+{
+	char key;
+
+	key = getchar();
+	while (key == '\n')
+	{
+		key = getchar();
+	}
+
+	return (key);
+}
