@@ -22,13 +22,13 @@ This a terminal style game of famous Puzzle 15.
 - Colorful output for the right cells
 - Restart feature
 - Do/undo feature
+- Error, instruction messages 
+- Implemented file saving and loading from file
 
 ## TO DO
 
-- Implement file saving and loading from file
 - Algorithm that will solve the game
 - Settings option in the Menu
-- Better input
 
 ## Known bugs
 
