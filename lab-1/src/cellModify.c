@@ -41,10 +41,14 @@ void swapValues(cellData *data, int nextCell, int currentCell)
 
 void moveCells(char key, cellData *data, int canvasDivisions)
 {
+	// player cell (a.k.a. value 0 cell)
 	int currentCell;
+	// cell to swap with
+	int nextCell;
 	
-	// find current cell (a.k.a. empty cell)
 	currentCell = 0;
+	nextCell = 0;
+	// find current cell (a.k.a. empty cell)
 	while (data[currentCell].value != 0)
 	{
 		currentCell += 1;
@@ -58,8 +62,6 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 			return;
 		}
 
-		// find cell to swap with
-		int nextCell = 0;
 		// check to see if next cell meets the requirements
 		while (data[currentCell].x != data[nextCell].x // need to be the same on x axis
 		|| data[currentCell].y != data[nextCell].y + 1) // above currentCell on y axis
@@ -70,9 +72,6 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 		// swap positions
 		data[currentCell].y -= 1;
 		data[nextCell].y += 1;
-
-		// swap values
-		swapValues(*(&data), nextCell, currentCell);
 	}
 	else if (key == 's') // move down
 	{
@@ -82,8 +81,6 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 			return;
 		}
 
-		// find cell to swap with
-		int nextCell = 0;
 		while (data[currentCell].x != data[nextCell].x // need to be the same on x axis
 		|| data[currentCell].y != data[nextCell].y - 1) // below currentCell on y axis
 		{
@@ -93,9 +90,6 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 		// swap positions
 		data[currentCell].y += 1;
 		data[nextCell].y -= 1;
-
-		// swap values
-		swapValues(*(&data), nextCell, currentCell);
 	}
 	else if (key == 'a') // move left
 	{
@@ -105,8 +99,6 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 			return;
 		}
 
-		// find cell to swap with
-		int nextCell = 0;
 		// check to see if next cell meets the requirements
 		while (data[currentCell].x != data[nextCell].x + 1 // need to be the same on x axis
 		|| data[currentCell].y != data[nextCell].y) // above currentCell on y axis
@@ -117,9 +109,6 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 		// swap positions
 		data[currentCell].x -= 1;
 		data[nextCell].x += 1;
-
-		// swap values
-		swapValues(*(&data), nextCell, currentCell);
 	}
 	else if (key == 'd') // move right
 	{
@@ -129,8 +118,7 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 			return;
 		}
 
-		// find cell to swap with
-		int nextCell = 0;
+		// check to see if next cell meets the requirements
 		while (data[currentCell].x != data[nextCell].x - 1 // need to be the same on x axis
 		|| data[currentCell].y != data[nextCell].y) // below currentCell on y axis
 		{
@@ -140,10 +128,10 @@ void moveCells(char key, cellData *data, int canvasDivisions)
 		// swap positions
 		data[currentCell].x += 1;
 		data[nextCell].x -= 1;
-
-		// swap values & positions
-		swapValues(*(&data), nextCell, currentCell);
 	}
+
+	// swap values
+	swapValues(*(&data), nextCell, currentCell);
 }
 
 void generateRandomPuzzle(cellData *data, int canvasDivisions)
