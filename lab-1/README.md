@@ -21,18 +21,20 @@ This a terminal style game of famous Puzzle 15.
 - Player position color highlight
 - Colorful output for the right cells
 - Restart feature
+- Do/undo feature
 
 ## TO DO
 
 - Implement file saving and loading from file
-- Do/undo feature
 - Algorithm that will solve the game
 - Settings option in the Menu
 - Better input
 
 ## Known bugs
 
-- The input can get stuck sometimes, due to `getchar()`, will try fixing it
+- The input can get stuck sometimes, due to `getchar()`.
+
+> Fixed it by implementing inputCatch(), a small function that catches the new lines in a while.
 
 ## Building
 
