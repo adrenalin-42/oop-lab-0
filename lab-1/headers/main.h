@@ -68,4 +68,10 @@ void moveCells(char key, cellData *data, int canvasDivisions);
 // generate a random puzzle, based on simulating random user input
 void generateRandomPuzzle(cellData *data, int canvasDivisions);
 
+// save game data
+void gameSave(cellData *data, stackData *doStatus, stackData *redoStatus, int canvasDivisions);
+
+// load game data
+int loadSave(cellData *data, stackData *doStatus, stackData *redoStatus, int canvasDivisions);
+
 #endif
