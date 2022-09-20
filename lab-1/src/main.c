@@ -2,16 +2,18 @@
 
 int main(void)
 {
-	char	gameStatus[64];
-	int		canvasSize = 17; // minimum size is 8, recommended is 17
-	int		canvasDivisions = 4;
-	cellData *data;
-	stackData *doStatus; // do feature
-	stackData *redoStatus; // redo feature
+	char		gameStatus[64];
+	char		MOTD[128]; // message of the day (a.k.a. messages, instructions)
+	int			canvasSize = 17; // minimum size is 8, recommended is 17
+	int			canvasDivisions = 4;
+	cellData	*data;
+	stackData	*doStatus; // do feature
+	stackData	*redoStatus; // redo feature
 	
 	// initalization
 	data = (cellData *) malloc(sizeof(cellData) * canvasDivisions * canvasDivisions);
 	strcpy(gameStatus, "mainMenu");
+	strcpy(MOTD, "");
 	initCellData(*(&data), canvasDivisions);
 
 	// initialize stack for Do/Undo feature
@@ -23,6 +25,18 @@ int main(void)
 
 	while (true)
 	{
+		// clear screen
+		clearScreen();
+
+		// system to show messages after screen clearing
+		if (strcmp(MOTD, "") != 0)
+		{
+			applyColor("bold");
+			printf("%s\n\n", MOTD);
+			applyColor("regular");
+			strcpy(MOTD, " ");
+		}
+
 		if (strcmp(gameStatus, "mainMenu") == 0)
 		{
 			char key;
@@ -45,21 +59,23 @@ int main(void)
 				strcpy(gameStatus, "loadGame");
 				continue;
 			}
+			else if (key == '4')
+			{
+				strcpy(gameStatus, "removeSave");
+				continue;
+			}
 			else
 			{
 				break;
 			}
 		}
-		if (strcmp(gameStatus, "startGame") == 0)
+		else if (strcmp(gameStatus, "startGame") == 0)
 		{
 			char key;
 
-			// clear screen
-			clearScreen();
-
 			// draw game
 			drawGame(data, canvasSize, canvasDivisions);
-			// printf("Stack size: %d", getStackSize(doStatus));
+			
 			key = inputCatch();
 
 			// move in a specific direction
@@ -94,6 +110,7 @@ int main(void)
 				// safety check, avoid seg. fault
 				if (tmp == (void *)NULL)
 				{
+					strcpy(MOTD, "Sorry, can't undo that");
 					continue;
 				}
 
@@ -103,8 +120,7 @@ int main(void)
 				// apply the `undo` change
 				data = tmp;
 
-
-				// printf("Here Stack size: %d", getStackSize(redoStatus));
+				strcpy(MOTD, "Reverted the last move");
 			}
 			// redo a move
 			else if (key == 'r')
@@ -114,6 +130,7 @@ int main(void)
 				// safety check, avoid seg. fault
 				if (tmp == (void *)NULL)
 				{
+					strcpy(MOTD, "There is nothing to redo");
 					continue;
 				}
 
@@ -121,17 +138,26 @@ int main(void)
 				stackPush(&doStatus, 20, data);
 
 				data = tmp;
-				// printf("Stack size: %d", getStackSize(redoStatus));
+
+				strcpy(MOTD, "Redid the undo move");
 			}
 			// generate random puzzle
 			else if (key == 'g')
 			{
 				generateRandomPuzzle(*(&data), canvasDivisions);
+				strcpy(MOTD, "Generating new puzzle..");
+			}
+			// save game
+			else if (key == 'v')
+			{
+				gameSave(data, doStatus, redoStatus, canvasDivisions);
+				strcpy(MOTD, "Game saved sucessfully");
 			}
 			// generate new canvas
 			else if (key == 'n')
 			{
 				initCellData(*(&data), canvasDivisions);
+				strcpy(MOTD, "New game generated");
 			}
 			// quit game to main menu
 			else if (key == 'q') // quit
@@ -139,6 +165,38 @@ int main(void)
 				strcpy(gameStatus, "mainMenu");
 				continue;
 			}
+		}
+		else if (strcmp(gameStatus, "loadGame") == 0)
+		{
+			int code;
+
+			code = loadSave(*(&data), *(&doStatus), *(&redoStatus), canvasDivisions);
+
+			if (code == -1)
+			{
+				strcpy(MOTD, "Game save is broken. Creating new game.");
+				initCellData(*(&data), canvasDivisions);
+			}
+			else if (code == -2)
+			{
+				strcpy(MOTD, "Game save corrupted. Creating new game.");
+				initCellData(*(&data), canvasDivisions);
+			}
+			strcpy(MOTD, "Game loaded succseffully.");
+			strcpy(gameStatus, "startGame");
+		}
+		else if (strcmp(gameStatus, "removeSave") == 0)
+		{
+			if (remove("gameSave.faf") == 0) 
+			{
+				strcpy(MOTD, "The file is deleted successfully");
+			}
+			else 
+			{
+				strcpy(MOTD, "The save file does not exist");
+			}
+			strcpy(gameStatus, "mainMenu");
+			clearScreen();
 		}
 	}
 	return (0);
