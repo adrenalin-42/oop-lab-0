@@ -8,23 +8,47 @@
 #include <stdlib.h>
 
 // data type that responds for data in cells
-typedef struct cellData
+typedef struct struct_cellData
 {
-	int x;
-	int y;
-	int value;
-	bool isDoubleDigit;
+	int 	x;
+	int 	y;
+	int 	value;
+	bool 	isDoubleDigit;
 } cellData;
+
+// stack for do/undo feature in the game
+typedef struct struct_stackData
+{
+	void                	*value;
+	struct struct_stackData	*next;
+} stackData;
+
+// push element to the top
+void stackPush(stackData **data, int maxCount, void *stackValue);
+
+// pop element from stack
+void *stackPop(stackData *data);
+
+// print the content of stack
+void stackPrint(stackData *data);
+
+// get the size of stack
+int getStackSize(stackData *data);
+
+// initialize stack
+stackData *initStack(void *data);
 
 // draw the game in terminal
 void drawGame(cellData *data, int canvasSize, int canvasDivisions);
-
 
 // print the main menu options
 void printMainMenu(void);
 
 // show control options
 void showControls(void);
+
+// little modification to getchar(), to catch '\n'
+char inputCatch();
 
 // apply color to an output
 void applyColor(const char *style);
