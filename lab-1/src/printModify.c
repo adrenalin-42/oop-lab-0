@@ -32,7 +32,7 @@ void applyColor(const char *style)
 	}
 	else if (strcmp(style, "bold") == 0)
 	{
-		printf("\033[1;31m");
+		printf("\033[1;34m");
 	}
 }
 
