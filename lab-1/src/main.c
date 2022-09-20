@@ -3,13 +3,20 @@
 int main(void)
 {
 	char	gameStatus[64];
-	int		canvasSize = 8; // minimum size is 8, recommended is 17
+	int		canvasSize = 17; // minimum size is 8, recommended is 17
 	int		canvasDivisions = 4;
-	cellData data[16];
+	cellData *data;
+	stackData *doStatus; // do feature
+	stackData *redoStatus; // redo feature
 	
 	// initalization
+	data = (cellData *) malloc(sizeof(cellData) * canvasDivisions * canvasDivisions);
 	strcpy(gameStatus, "mainMenu");
 	initCellData(*(&data), canvasDivisions);
+
+	// initialize stack for Do/Undo feature
+	doStatus = initStack(data);
+	redoStatus = initStack(data);
 
 	// clear screen
 	clearScreen();
@@ -21,7 +28,7 @@ int main(void)
 			char key;
 
 			printMainMenu();
-			key = getchar();
+			key = inputCatch();
 
 			if (key == '1')
 			{
@@ -52,28 +59,84 @@ int main(void)
 
 			// draw game
 			drawGame(data, canvasSize, canvasDivisions);
-			getchar(); // To consume '\n'
-			key = getchar();
+			// printf("Stack size: %d", getStackSize(doStatus));
+			key = inputCatch();
 
+			// move in a specific direction
 			if (key == 'w'
 			|| key == 's'
 			|| key == 'a'
 			|| key == 'd')
 			{
+				// make a copy of data to undo later
+				cellData *tmp;
+
+				// memory per one `canvas` is sizeof(cellData) * canvas size * size of an integer
+				tmp = (cellData *)malloc(sizeof(cellData) * canvasDivisions * canvasDivisions * sizeof(int));
+
+				// copy everything in tmp, so later the copy will be saved
+				memcpy(tmp, data, sizeof(data) * canvasDivisions * canvasDivisions * sizeof(int));
+
+				// push the copy to the stack
+				stackPush(&doStatus, 20, tmp);
+
+				// apply the move
 				moveCells(key, *(&data), canvasDivisions);
+
+				// reset redoStatus on move
+				redoStatus = initStack(data);
 			}
-			if (key == 'r')
+			// undo a move
+			else if (key == 'u')
+			{
+				cellData *tmp = stackPop(doStatus);
+
+				// safety check, avoid seg. fault
+				if (tmp == (void *)NULL)
+				{
+					continue;
+				}
+
+				// push the undo to the stack
+				stackPush(&redoStatus, 20, data);
+
+				// apply the `undo` change
+				data = tmp;
+
+
+				// printf("Here Stack size: %d", getStackSize(redoStatus));
+			}
+			// redo a move
+			else if (key == 'r')
+			{
+				cellData *tmp = stackPop(redoStatus);
+
+				// safety check, avoid seg. fault
+				if (tmp == (void *)NULL)
+				{
+					continue;
+				}
+
+				// push the changes to doStatus, to avoid bug
+				stackPush(&doStatus, 20, data);
+
+				data = tmp;
+				// printf("Stack size: %d", getStackSize(redoStatus));
+			}
+			// generate random puzzle
+			else if (key == 'g')
 			{
 				generateRandomPuzzle(*(&data), canvasDivisions);
 			}
+			// generate new canvas
 			else if (key == 'n')
 			{
 				initCellData(*(&data), canvasDivisions);
 			}
+			// quit game to main menu
 			else if (key == 'q') // quit
 			{
 				strcpy(gameStatus, "mainMenu");
-				getchar(); // Catch '\n'
 				continue;
 			}
 		}
