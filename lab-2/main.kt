@@ -13,10 +13,10 @@
 
 class User(_nickName : String)
 {
-    val nickName = _nickName;
-    val admin = Administrator(this);
-    val roles = Roles(this);
-    val gifts : MutableList<Gift> = mutableListOf();
+    private val nickName = _nickName;
+    private val admin = Administrator(this);
+    private val roles = Roles(this);
+    private val gifts : MutableList<Gift> = mutableListOf();
 
     init
     {
@@ -27,9 +27,9 @@ class User(_nickName : String)
     fun sendMessage(server : Server, message : String)
     {
         val msg = Message(this, message);
-        if (server.settings.saveLogs)
+        if (server.getSaveLogs())
         {
-            server.history.addTextLog(msg);
+            server.addTextLog(msg);
         }
     }
 
@@ -37,9 +37,9 @@ class User(_nickName : String)
     fun sendVoiceMessage(server : Server, voiceMessage : String)
     {
         val msg = VoiceMessage(this, voiceMessage);
-        if (server.settings.saveLogs)
+        if (server.getSaveLogs())
         {
-            server.history.addVoiceLog(msg);
+            server.addVoiceLog(msg);
         }
     }
 
@@ -47,10 +47,40 @@ class User(_nickName : String)
     fun sendPhotoMessage(server : Server, photoMessage : String)
     {
         val msg = PhotoMessage(this, photoMessage);
-        if (server.settings.saveLogs)
+        if (server.getSaveLogs())
         {
-            server.history.addPhotoLog(msg);
+            server.addPhotoLog(msg);
         }
+    }
+
+    // check admin
+    fun checkAdmin()
+    {
+        admin.checkAdmin();
+    }
+
+    // toggle admin
+    fun toggleAdmin()
+    {
+        admin.toggleAdmin();
+    }
+
+    // add role to user
+    fun addRole(_role : String) 
+    {
+        roles.addRole(_role);
+    }
+
+    // remove role from user
+    fun removeRole(_role : String)
+    {
+        roles.removeRole(_role);
+    }
+
+    // print roles of user
+    fun printRoles()
+    {
+        roles.printRoles();
     }
 
     // create gift
@@ -65,11 +95,17 @@ class User(_nickName : String)
     // send gifts
     fun sendGift(gift : Gift, sendTo : User)
     {
-        val giftDescription = gift.gift;
+        val giftDescription = gift.getGiftDescription();
 
         gifts.remove(gift);
         sendTo.gifts.add(gift);
         println("$this has sent $sendTo $giftDescription");
+    }
+
+    // get user nickname
+    fun getNickName(): String
+    {
+        return (nickName);
     }
 
     // assign user to server
@@ -81,8 +117,8 @@ class User(_nickName : String)
 
 class Administrator(_user : User, _isAdmin : Boolean = false)
 {
-    var isAdmin : Boolean = _isAdmin;
-    val user = _user;
+    private var isAdmin : Boolean = _isAdmin;
+    private val user = _user;
 
     // toggle admin status
     fun toggleAdmin()
@@ -106,8 +142,8 @@ class Administrator(_user : User, _isAdmin : Boolean = false)
 
 class Roles(_user : User)
 {
-    val roles : MutableList<String> = mutableListOf();
-    val user = _user;
+    private val roles : MutableList<String> = mutableListOf();
+    private val user = _user;
 
     // add role to user
     fun addRole(_role : String) 
@@ -124,7 +160,7 @@ class Roles(_user : User)
     // print roles of user
     fun printRoles()
     {
-        val nickName = user.nickName;
+        val nickName = user.getNickName();
 
         for (role in roles)
         {
@@ -135,10 +171,10 @@ class Roles(_user : User)
 
 class Server(_name : String)
 {
-    val name = _name;
-    val users : MutableList<User> = mutableListOf();
-    val history = ChatHistory();
-    val settings = Settings();
+    private val name = _name;
+    private val users : MutableList<User> = mutableListOf();
+    private val history = ChatHistory();
+    private val settings = Settings();
 
     // initiate server
     init
@@ -149,9 +185,39 @@ class Server(_name : String)
     // add user to server
     fun addConection(_user : User)
     {
-        val userNickName = _user.nickName;
+        val userNickName = _user.getNickName();
         users.add(_user);
         println("$userNickName has succesfully connected to $name.")
+    }
+
+    // add text log
+    fun addTextLog(_msg : Message)
+    {
+        history.addTextLog(_msg);
+    }
+
+    // add voice log
+    fun addVoiceLog(_msg : VoiceMessage)
+    {
+        history.addVoiceLog(_msg);
+    }
+
+    // log photo log
+    fun addPhotoLog(_msg : PhotoMessage)
+    {
+        history.addPhotoLog(_msg);
+    }
+
+    // get save logs
+    fun getSaveLogs(): Boolean
+    {
+        return (settings.getSaveLogs());
+    }
+
+    // print chat history
+    fun printHistory()
+    {
+        history.printHistory();
     }
 
     // print all connected users
@@ -164,7 +230,7 @@ class Server(_name : String)
 
 class Settings(_saveLogs : Boolean = true)
 {
-    var saveLogs : Boolean = _saveLogs;
+    private var saveLogs : Boolean = _saveLogs;
 
     // initate server, saving logs by default
     init
@@ -184,59 +250,105 @@ class Settings(_saveLogs : Boolean = true)
     {
         saveLogs = !saveLogs;
     }
+
+    fun getSaveLogs(): Boolean
+    {
+        return (saveLogs);
+    }
 }
 
 class Message(_user : User, _message : String)
 {
-    val message = _message;
-    val nickName = _user.nickName;
+    private val message = _message;
+    private val nickName = _user.getNickName();
 
     // a message has been sent
     init
     {
         println("$nickName says $message");
-    }    
+    }
+
+    // get message text
+    fun getMessage(): String
+    {
+        return (message);
+    }
+
+    // get user nickname
+    fun getNickName(): String
+    {
+        return (nickName);
+    }
 }
 
 class VoiceMessage(_user : User, _voiceMessage : String)
 {
-    val voiceMessage = _voiceMessage;
-    val nickName = _user.nickName;
+    private val voiceMessage = _voiceMessage;
+    private val nickName = _user.getNickName();
 
     // a voice message has been sent
     init
     {
         println("$nickName says via a voice message $voiceMessage");
     }
+
+    // get voice message text
+    fun getVoiceMessage(): String
+    {
+        return (voiceMessage);
+    }
+
+    // get user nickname
+    fun getNickName(): String
+    {
+        return (nickName);
+    }
 }
 
 class PhotoMessage(_user : User, _photoDescription : String)
 {
-    val photoDescription = _photoDescription;
-    val nickName = _user.nickName;
+    private val photoDescription = _photoDescription;
+    private val nickName = _user.getNickName();
 
     // a photo message has been sent
     init
     {
         println("$nickName sent a photo of $photoDescription");
     }
+
+    // get voice message text
+    fun getPhotoDescription(): String
+    {
+        return (photoDescription);
+    }
+
+    // get user nickname
+    fun getNickName(): String
+    {
+        return (nickName);
+    }
 }
 
 class Gift(_belongsTo : User, _gift : String)
 {
-    val gift = _gift;
-    val belongsTo = _belongsTo;
+    private val giftDescription: String = _gift;
+    private val belongsTo: User = _belongsTo;
 
     // a gift has been created
     init
     {
-        println("A $gift gift has been created by $belongsTo!");
+        println("A $giftDescription gift has been created by $belongsTo!");
+    }
+
+    fun getGiftDescription(): String
+    {
+        return (giftDescription);
     }
 }
 
 class ChatHistory()
 {
-    val history : MutableList<Any> = mutableListOf();
+    private val history : MutableList<Any> = mutableListOf();
 
     // initate chat history
     init
@@ -262,6 +374,12 @@ class ChatHistory()
         history.add(_msg);
     }
 
+    // get text log
+    fun getLog(): MutableList<Any>
+    {
+        return (history);
+    }
+
     // check all history of chat
     fun printHistory()
     {
@@ -269,20 +387,20 @@ class ChatHistory()
         {
             if (msg is Message)
             {
-                val message = msg.message;
-                val nickName = msg.nickName;
+                val message = msg.getMessage();
+                val nickName = msg.getNickName();
                 println("$nickName: $message");
             }
             else if (msg is VoiceMessage)
             {
-                val message = msg.voiceMessage;
-                val nickName = msg.nickName;
+                val message = msg.getVoiceMessage();
+                val nickName = msg.getNickName();
                 println("$nickName (via voice): $message");
             }
             else if (msg is PhotoMessage)
             {
-                val message = msg.photoDescription;
-                val nickName = msg.nickName;
+                val message = msg.getPhotoDescription();
+                val nickName = msg.getNickName();
                 println("$nickName sent a photo of $message");
             }
         }
@@ -298,30 +416,30 @@ fun main()
 
 
     // admin test
-    user1.admin.checkAdmin();
+    user1.checkAdmin();
 
-    user1.admin.toggleAdmin();
+    user1.toggleAdmin();
 
-    user1.admin.checkAdmin();
+    user1.checkAdmin();
 
     // chat history test
-    server1.history.printHistory();
+    server1.printHistory();
 
     // roles test
-    user1.roles.addRole("om nebun");
-    user1.roles.addRole("bibliophile");
+    user1.addRole("om nebun");
+    user1.addRole("bibliophile");
 
-    user1.roles.printRoles();
+    user1.printRoles();
 
-    user1.roles.removeRole("bibliophile");
-    user1.roles.printRoles();
+    user1.removeRole("bibliophile");
+    user1.printRoles();
 
     // different types of messages tests
     user1.sendPhotoMessage(server1, "cute cat");
     user1.sendVoiceMessage(server1, "hai la baut");
 
     // chat history test again
-    server1.history.printHistory();
+    server1.printHistory();
 
     // gifts test
     val gift = user1.createGift("caiet cu masinele");
