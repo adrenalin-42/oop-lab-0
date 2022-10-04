@@ -2,20 +2,26 @@
 
 ## Into OOP and Inheritance
 
-Doesn't work yet. Needs fixing.
+A diagram visualization of the project.
 
-## Discord chat simulator:
+<img src="media/1.png">
+
+## What it includes?
+
+Universe superclass:
 
 - Server class
 - User class
+   1. Administrator subclass
 - Message class
+   1. Text messages subclass
+   2. Voice messages subclass
+   3. Photo messages subclass
 - Settings class
-- ChatHistory class
-- Administrator class
-- Roles class
-- Voice messages class
-- Photo class
-- Gifts class
+- Chat History class
+- Achievements class
+   1. Roles subclass
+   2. Gifts subclass
 
 ## Building
 
