@@ -6,7 +6,7 @@
 // Settings
 // ChatHistory
 // Administrator
-// Roles
+// Role
 // Voice messages
 // Photo
 // Gifts
@@ -31,9 +31,8 @@ open class Universe()
 open class User(_nickName : String) : Universe()
 {
     private val nickName = _nickName;
-    // private val admin = Administrator(nickName);
-    // private val roles = Roles(nickName);
     private val gifts: MutableList<Gift> = mutableListOf();
+    private val roles: MutableList<Role> = mutableListOf();
 
     init
     {
@@ -70,34 +69,34 @@ open class User(_nickName : String) : Universe()
         }
     }
 
-    // check admin
-    fun checkAdmin()
-    {
-        admin.internal_checkAdmin();
-    }
-
-    // toggle admin
-    fun toggleAdmin()
-    {
-        admin.internal_toggleAdmin();
-    }
-
     // add role to user
     fun addRole(_role : String) 
     {
-        roles.internal_addRole(_role);
+        val newRole = Role(_role);
+
+        roles.add(newRole);
     }
 
     // remove role from user
     fun removeRole(_role : String)
     {
-        roles.internal_removeRole(_role);
+        for (role in roles)
+        {
+            if (_role == role.getRoleName())
+            {
+                roles.remove(role);
+                break;
+            }
+        }
     }
 
     // print roles of user
     fun printRoles()
     {
-        roles.internal_printRoles();
+        for (role in roles)
+        {
+            println("$nickName has role $role");
+        }
     }
 
     // create gift
@@ -138,13 +137,13 @@ class Administrator(_user : String, _isAdmin : Boolean = false): User(_user)
     private val user = _user;
 
     // toggle admin status
-    fun internal_toggleAdmin()
+    fun toggleAdmin()
     {
         isAdmin = !isAdmin;
     }
 
     // check if current user is admin
-    fun internal_checkAdmin()
+    fun checkAdmin()
     {
         if (isAdmin)
         {
@@ -157,39 +156,34 @@ class Administrator(_user : String, _isAdmin : Boolean = false): User(_user)
     }
 }
 
-class Roles(_nickName : String): User(_nickName)
+open class Achivables(): Universe()
 {
-    private val roles : MutableList<String> = mutableListOf();
-    private val nickName = _nickName;
 
-    // add role to user
-    fun internal_addRole(_role : String) 
-    {
-        roles.add(_role);
-    }
+} 
 
-    // remove role from user
-    fun internal_removeRole(_role : String)
-    {
-        roles.remove(_role);
-    }
+class Role(_role : String): Achivables()
+{
+    private val roleName = _role;
 
     // print roles of user
-    fun internal_printRoles()
+    fun printRole()
     {
-        for (role in roles)
-        {
-            println("$nickName has roles $role")
-        }
+        println("The role is $roleName")
+    }
+
+    // get role name
+    fun getRoleName(): String
+    {
+        return (roleName);
     }
 }
 
-open class Server(_name : String): Universe()
+class Server(_name : String): Universe()
 {
     private val serverName = _name;
     private val users : MutableList<User> = mutableListOf();
-    private val history = ChatHistory(this);
-    private val settings = Settings(this);
+    private val history = ChatHistory();
+    private val settings = Settings();
 
     // initiate server
     init
@@ -257,7 +251,7 @@ open class Server(_name : String): Universe()
     }
 }
 
-class Settings(serverName : Server, _saveLogs : Boolean = true): Server(serverName.getServerName())
+class Settings(_saveLogs : Boolean = true): Universe()
 {
     private var saveLogs : Boolean = _saveLogs;
 
@@ -349,7 +343,7 @@ class PhotoMessage(user : User, _photoDescription : String): Message(user)
     }
 }
 
-class Gift(_belongsTo : User, _gift : String): User(_belongsTo.getNickName())
+class Gift(_belongsTo : User, _gift : String): Achivables()
 {
     private val giftDescription: String = _gift;
     private val belongsTo: User = _belongsTo;
@@ -366,7 +360,7 @@ class Gift(_belongsTo : User, _gift : String): User(_belongsTo.getNickName())
     }
 }
 
-class ChatHistory(serverName : Server): Server(serverName.getServerName())
+class ChatHistory(): Universe()
 {
     private val history : MutableList<Any> = mutableListOf();
 
@@ -433,8 +427,9 @@ class ChatHistory(serverName : Server): Server(serverName.getServerName())
 
 fun main()
 {
-    val user1 = User("John");
+    val user1 = Administrator("John");
     val server1 = Server("FAF-21X");
+    val ach1 = Gift(user1, "cute cat");
     user1.assignToServer(server1);
     user1.sendTextMessage(server1, "Hello world!");
 
@@ -450,6 +445,7 @@ fun main()
     server1.printHistory();
 
     // roles test
+
     user1.addRole("om nebun");
     user1.addRole("bibliophile");
 
