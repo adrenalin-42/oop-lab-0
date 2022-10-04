@@ -9,6 +9,7 @@
 // Role
 // Voice messages
 // Photo
+// Achievements
 // Gifts
 
 open class Universe()
