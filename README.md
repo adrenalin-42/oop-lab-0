@@ -21,6 +21,10 @@ a little simulation of that.
 In this lab I had to rewrite `Lab 2`, into using inheritance. A lot of code was gone and even more
 was added.
 
+## Lab 4
+
+In this lab I had to rewrite `Lab 3`, into using polymorphism. It was fun. (not really :sadkek:)
+
 
 ## Building
 
