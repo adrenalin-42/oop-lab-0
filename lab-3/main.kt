@@ -135,7 +135,7 @@ open class User(_nickName : String) : Universe()
 class Administrator(_user : String, _isAdmin : Boolean = false): User(_user) 
 {
     private var isAdmin : Boolean = _isAdmin;
-    private val user = _user;
+    private val user : String = _user;
 
     // toggle admin status
     fun toggleAdmin()
@@ -284,7 +284,7 @@ class Settings(_saveLogs : Boolean = true): Universe()
 
 open class Message(user : User): Universe()
 {
-    internal val nickName = user.getNickName();
+    internal val nickName : String = user.getNickName();
 
     // get user nickName
     fun getNickName() : String
@@ -295,7 +295,7 @@ open class Message(user : User): Universe()
 
 class TextMessage(user : User, _textMessage : String): Message(user)
 {
-    private val textMessage = _textMessage;
+    private val textMessage : String = _textMessage;
 
     // a message has been sent
     init
@@ -312,7 +312,7 @@ class TextMessage(user : User, _textMessage : String): Message(user)
 
 class VoiceMessage(user : User, _voiceMessage : String): Message(user)
 {
-    private val voiceMessage = _voiceMessage;
+    private val voiceMessage : String = _voiceMessage;
 
     // a voice message has been sent
     init
@@ -329,7 +329,7 @@ class VoiceMessage(user : User, _voiceMessage : String): Message(user)
 
 class PhotoMessage(user : User, _photoDescription : String): Message(user)
 {
-    private val photoDescription = _photoDescription;
+    private val photoDescription : String = _photoDescription;
 
     // a photo message has been sent
     init
