@@ -14,10 +14,12 @@
 
 // INTEFACES 
 
+import kotlin.random.Random
+
 interface printContent 
 {
     fun printContent();
-} 
+}   
 
 // CLASSES
 
@@ -149,7 +151,7 @@ open class User(_nickName : String) : Universe(), printContent
     }
 }
 
-class Administrator(_user : String, _isAdmin : Boolean = false): User(_user) 
+class Administrator(_user : String, _isAdmin : Boolean = false): User(_user)
 {
     private var isAdmin : Boolean = _isAdmin;
     private val user : String = _user;
@@ -196,12 +198,12 @@ class Role(_role : String): Achivables()
     }
 }
 
-class Server(_name : String): Universe()
+class Server(_serverName : String, _history : ChatHistory, _settings : Settings): Universe()
 {
-    private val serverName = _name;
+    private val serverName : String =       _serverName;
     private val users : MutableList<User> = mutableListOf();
-    private val history = ChatHistory();
-    private val settings = Settings();
+    private val history : ChatHistory =     _history;
+    private val settings : Settings =       _settings;
 
     // initiate server
     init
@@ -258,7 +260,7 @@ class Server(_name : String): Universe()
     // print chat history
     fun printHistory()
     {
-        history.internal_printHistory();
+        history.printContent();
     }
 
     // print all connected users
@@ -299,7 +301,7 @@ class Settings(_saveLogs : Boolean = true): Universe()
     }
 }
 
-open class Message(user : User): Universe()
+abstract class Message(user : User): Universe(), printContent
 {
     internal val nickName : String = user.getNickName();
 
@@ -325,6 +327,12 @@ class TextMessage(user : User, _textMessage : String): Message(user)
     {
         return (textMessage);
     }
+
+    // print content
+    override fun printContent()
+    {
+        println("$nickName says via a voice message $textMessage");
+    }
 }
 
 class VoiceMessage(user : User, _voiceMessage : String): Message(user)
@@ -342,6 +350,12 @@ class VoiceMessage(user : User, _voiceMessage : String): Message(user)
     {
         return (voiceMessage);
     }
+
+    // print content
+    override fun printContent()
+    {
+        println("$nickName says via a voice message $voiceMessage");
+    }
 }
 
 class PhotoMessage(user : User, _photoDescription : String): Message(user)
@@ -358,6 +372,12 @@ class PhotoMessage(user : User, _photoDescription : String): Message(user)
     fun getPhotoDescription(): String
     {
         return (photoDescription);
+    }
+
+    // print content
+    override fun printContent()
+    {
+        println("$nickName says via a voice message $photoDescription");
     }
 }
 
@@ -378,7 +398,7 @@ class Gift(_belongsTo : User, _gift : String): Achivables()
     }
 }
 
-class ChatHistory(): Universe()
+class ChatHistory(): Universe(), printContent
 {
     private val history : MutableList<Any> = mutableListOf();
 
@@ -413,7 +433,7 @@ class ChatHistory(): Universe()
     }
 
     // check all history of chat
-    fun internal_printHistory()
+    override fun printContent()
     {
         for (msg in history)
         {
@@ -445,11 +465,307 @@ class ChatHistory(): Universe()
 
 fun main()
 {
-    val user1 = Administrator("John");
-    val server1 = Server("FAF-21X");
+    val setOfUserNames = listOf(
+    "Jason Wolf",
+    "Rey Riggs",
+    "Christian Holder",
+    "Lanny Horton",
+    "Wilton Lynn",
+    "Jerald Franco",
+    "Jacquelyn Rodriguez",
+    "Ruth Buchanan",
+    "Ruben Hicks",
+    "Joesph Schmitt",
+    "Garland Cole",
+    "Janine Doyle",
+    "Odessa Madden",
+    "Crystal Parker",
+    "Tyrone Salinas",
+    "Kendall Ramos",
+    "Gail Juarez",
+    "Cordell Dennis",
+    "Dorothea Frederick",
+    "Valerie Guzman",
+    "Lenore Kline",
+    "Helen Nielsen",
+    "Peter Hancock",
+    "Corrine Yates",
+    "Deshawn Le",
+    "Liz Gilmore",
+    "Lucia Blevins",
+    "Sam Ellis",
+    "Diana Spence",
+    "Barry Grimes",
+    "Leonardo Rios",
+    "Gerald Bonilla",
+    "Milagros Warner",
+    "Jeannine Petty",
+    "Lupe Turner",
+    "Amanda Wilcox",
+    "Raquel Duarte",
+    "Sonny Prince",
+    "Rico Carlson",
+    "Forrest Wright",
+    "Marcos Wilkerson",
+    "Drew Mahoney",
+    "Ross Kim",
+    "Minnie Kramer",
+    "Evangelina Howell",
+    "Darla Lang",
+    "Hong Hooper",
+    "Osvaldo Rivera",
+    "Celina Lucero",
+    "Jamison Schmidt");
+    val setOfServerNames = listOf(
+    "MedForward",
+    "Internetse",
+    "iTransact Ltd",
+    "Cergis Software",
+    "WaveFX",
+    "Magnetic Creative Services",
+    "Lamb Creative Marketing",
+    "Rise Hosting",
+    "Psionic-Studios",
+    "Digital-Dreams",
+    "Webdigi",
+    "Docklands Cloud Hosting",
+    "Bluedata",
+    "HostToast",
+    "Ignite",
+    "Akendi",
+    "Atomic Design Nashville",
+    "Netscan",
+    "Elpro Hosting Company",
+    "Hosting Karma",
+    "Lime Creative",
+    "Just web Hosting",
+    "Byter",
+    "QualiSpace",
+    "NIMBLER",
+    "Speak Creative Nashville",
+    "CSL Web",
+    "Selesti",
+    "Scala Hosting LLC.",
+    "Datapipe",
+    "Codea software",
+    "Fluent",
+    "Dsgn One Web design",
+    "Quantum Business Consulting",
+    "Strange Bird Media",
+    "Cabedge Design",
+    "Bear Web Design",
+    "The Positive Internet Company",
+    "Alchemist Studios",
+    "A2 Hosting",
+    "End Point Corporation",
+    "PulseHost",
+    "CentralNic Ltd",
+    "Hostingsource",
+    "Blue Sky",
+    "Hostrack",
+    "Brady MillsGigaTux",
+    "Tiny Shark",
+    "Web Hosting Hub",
+    "Vertical Web",
+    "Netulip Hosting",
+    "Adeo Digital Marketing Agency",
+    "Avenue Design",
+    "DevDigital",
+    "GreenGeeks",
+    "Grappo Hosting",
+    "Ocean Hostia",
+    "CloudSpace",
+    "Evolve Design",
+    "Creative Warehouse",
+    "KD Web",
+    "Golden Spiral Marketing",
+    "Web",
+    "G5 Media",
+    "Social Media Marketing Agency",
+    "Borne Digital",
+    "Telstra",
+    "Web Work",
+    "Skyron",
+    "Verasseti",
+    "Atiba Hosting, LLC",
+    "babyHost",
+    "Chaos Design",
+    "2idesign Ltd",
+    "DePalma Studios",
+    "Paramore Digital",
+    "Interserver",
+    "Iconic Digital",
+    "Go4ace",
+    "Digimax Dental Marketing",
+    "Ember Media",
+    "Level60 Consulting");
+
+    val setOfMessages = listOf(
+    "It took him a month to finish the meal.",
+    "They decided to plant an orchard of cotton candy.",
+    "People generally approve of dogs eating cat food but not cats eating dog food.",
+    "Stop waiting for exceptional things to just happen.",
+    "As he entered the church he could hear the soft voice of someone whispering into a cell phone.",
+    "The gloves protect my feet from excess work.",
+    "Plans for this weekend include turning wine into water.",
+    "Warm beer on a cold day isn't my idea of fun.",
+    "He is good at eating pickles and telling women about his emotional problems.",
+    "He was the type of guy who liked Christmas lights on his house in the middle of July.",
+    "It was at that moment that he learned there are certain parts of the body that you should never Nair.",
+    "It was always dangerous to drive with him since he insisted the safety cones were a slalom course.",
+    "Garlic ice-cream was her favorite.",
+    "He went on a whiskey diet and immediately lost three days.",
+    "He took one look at what was under the table and noped the hell out of there.",
+    "Pair your designer cowboy hat with scuba gear for a memorable occasion.",
+    "I used to practice weaving with spaghetti three hours a day but stopped because I didn't want to die alone.",
+    "I really want to go to work, but I am too sick to drive.",
+    "There were a lot of paintings of monkeys waving bamboo sticks in the gallery.",
+    "Instead of a bachelorette party",
+    "The best key lime pie is still up for debate.",
+    "It isn't difficult to do a handstand if you just stand on your hands.",
+    "I never knew what hardship looked like until it started raining bowling balls.",
+    "He stepped gingerly onto the bridge knowing that enchantment awaited on the other side.",
+    "Being unacquainted with the chief raccoon was harming his prospects for promotion.",
+    "Tom got a small piece of pie.",
+    "The murder hornet was disappointed by the preconceived ideas people had of him.",
+    "Gwen had her best sleep ever on her new bed of nails.",
+    "I may struggle with geography, but I'm sure I'm somewhere around here.",
+    "Thigh-high in the water, the fisherman’s hope for dinner soon turned to despair.",
+    "He is no James Bond; his name is Roger Moore.",
+    "I'm worried by the fact that my daughter looks to the local carpet seller as a role model.",
+    "Watching the geriatric men’s softball team brought back memories of 3 yr olds playing t-ball.",
+    "She was the type of girl that always burnt sugar to show she cared.",
+    "Patricia loves the sound of nails strongly pressed against the chalkboard.",
+    "I'm confused: when people ask me what's up, and I point, they groan.",
+    "When he had to picnic on the beach, he purposely put sand in other people’s food.",
+    "They looked up at the sky and saw a million stars.",
+    "He shaved the peach to prove a point.",
+    "I come from a tribe of head-hunters, so I will never need a shrink.",
+    "Lucifer was surprised at the amount of life at Death Valley.",
+    "Today we gathered moss for my uncle's wedding.",
+    "Doris enjoyed tapping her nails on the table to annoy everyone.",
+    "In the end, he realized he could see sound and hear words.",
+    "Had he known what was going to happen, he would have never stepped into the shower.",
+    "They wandered into a strange Tiki bar on the edge of the small beach town.",
+    "There were three sphered rocks congregating in a cubed room.",
+    "With a single flip of the coin, his life changed forever.",
+    "The worst thing about being at the top of the career ladder is that there's a long way to fall.",
+    )
+
+    val setOfRoles = listOf(
+    "electronic",
+    "abundant",
+    "tranquil",
+    "annoyed",
+    "selfish",
+    "innocent",
+    "additional",
+    "lacking",
+    "aboriginal",
+    "arrogant",
+    "whispering",
+    "pregnant",
+    "accidental",
+    "ambiguous",
+    "testy",
+    "thirsty",
+    "average",
+    "incredible",
+    "inner",
+    "peaceful",
+    "substantial",
+    "staking",
+    "puzzled",
+    "assorted",
+    "righteous",
+    "ashamed",
+    "stormy",
+    "swift",
+    "kindhearted",
+    "equal",
+    "frantic",
+    "subdued",
+    "marked",
+    "best",
+    "uneven",
+    "global",
+    "sedate",
+    "kaput",
+    "blushing",
+    "silly",
+    "faint",
+    "wicked",
+    "hellish",
+    "wise",
+    "empty",
+    "homeless",
+    "finicky",
+    "long",
+    "absurd",
+    "smelly"
+    )
+
+    val setOfNouns = listOf(
+    "management",
+    "food",
+    "dad",
+    "selection",
+    "difficulty",
+    "refrigerator",
+    "salad",
+    "reception",
+    "republic",
+    "agency",
+    "version",
+    "security",
+    "aspect",
+    "tea",
+    "elevator",
+    "wedding",
+    "description",
+    "ability",
+    "emphasis",
+    "income",
+    "farmer",
+    "apartment",
+    "establishment",
+    "art",
+    "shopping",
+    "revenue",
+    "loss",
+    "clothes",
+    "director",
+    "potato",
+    "impression",
+    "satisfaction",
+    "possibility",
+    "enthusiasm",
+    "suggestion",
+    "nature",
+    "driver",
+    "birthday",
+    "sir",
+    "device",
+    "responsibility",
+    "bonus",
+    "strategy",
+    "solution",
+    "sample",
+    "lady",
+    "bathroom",
+    "knowledge",
+    "investment",
+    "homework"
+    )
+
+    val user1 = Administrator(setOfUserNames[Random.nextInt(setOfUserNames.size)]);
+
+    val history = ChatHistory();
+    val settings = Settings();
+    val server1 = Server(setOfServerNames[Random.nextInt(setOfServerNames.size)], history, settings);
     // val ach1 = Gift(user1, "cute cat");
     user1.assignToServer(server1);
-    user1.sendTextMessage(server1, "Hello world!");
+    user1.sendTextMessage(server1, setOfMessages[Random.nextInt(setOfMessages.size)]);
 
 
     // admin test
@@ -464,28 +780,30 @@ fun main()
 
     // roles test
 
-    user1.addRole("om nebun");
-    user1.addRole("bibliophile");
+    user1.addRole(setOfRoles[Random.nextInt(setOfRoles.size)]);
+    user1.addRole(setOfRoles[Random.nextInt(setOfRoles.size)]);
 
     user1.printRoles();
 
-    user1.removeRole("bibliophile");
+    // user1.removeRole("bibliophile");
     user1.printRoles();
 
     // different types of messages tests
-    user1.sendPhotoMessage(server1, "cute cat");
-    user1.sendVoiceMessage(server1, "hai la baut");
+    user1.sendPhotoMessage(server1, setOfNouns[Random.nextInt(setOfNouns.size)]);
+    user1.sendVoiceMessage(server1, setOfMessages[Random.nextInt(setOfMessages.size)]);
 
     // chat history test again
     server1.printHistory();
 
     // gifts test
-    val gift = user1.createGift("caiet cu masinele");
+    val gift = user1.createGift(setOfNouns[Random.nextInt(setOfNouns.size)]);
 
     // second user test
-    val user2 = User("Kolea");
+    val user2 = User(setOfUserNames[Random.nextInt(setOfUserNames.size)]);
     user2.assignToServer(server1);
 
     user1.sendGift(gift, user2);
     // val univ = Universe();
+
+    user1.printContent();
 }
