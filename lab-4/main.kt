@@ -304,6 +304,7 @@ class Settings(_saveLogs : Boolean = true): Universe()
 abstract class Message(user : User): Universe(), printContent
 {
     internal val nickName : String = user.getNickName();
+    abstract fun getMessage() : String;
 
     // get user nickName
     fun getNickName() : String
@@ -323,7 +324,7 @@ class TextMessage(user : User, _textMessage : String): Message(user)
     }
 
     // get message text
-    fun getTextMessage(): String
+    override fun getMessage(): String
     {
         return (textMessage);
     }
@@ -346,7 +347,7 @@ class VoiceMessage(user : User, _voiceMessage : String): Message(user)
     }
 
     // get voice message text
-    fun getVoiceMessage(): String
+    override fun getMessage(): String
     {
         return (voiceMessage);
     }
@@ -369,7 +370,7 @@ class PhotoMessage(user : User, _photoDescription : String): Message(user)
     }
 
     // get voice message text
-    fun getPhotoDescription(): String
+    override fun getMessage(): String
     {
         return (photoDescription);
     }
@@ -446,17 +447,17 @@ class ChatHistory(): Universe(), printContent
 
             if (msg is TextMessage)
             {
-                val message = msg.getTextMessage();
+                val message = msg.getMessage();
                 println("$nickName: $message");
             }
             else if (msg is VoiceMessage)
             {
-                val message = msg.getVoiceMessage();
+                val message = msg.getMessage();
                 println("$nickName (via voice): $message");
             }
             else if (msg is PhotoMessage)
             {
-                val message = msg.getPhotoDescription();
+                val message = msg.getMessage();
                 println("$nickName sent a photo of $message");
             }
         }
