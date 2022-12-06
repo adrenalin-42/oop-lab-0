@@ -25,17 +25,8 @@ was added.
 
 In this lab I had to rewrite `Lab 3`, into using polymorphism. It was fun. (not really :sadkek:)
 
+## Lab 5
 
-## Building
-
-~~~~
-make
-~~~~
-
-## Launching
-
-~~~~
-make run
-~~~~
+In this lab I added simulation working without random elements. Every actions has a consequense on user(s) connected to the server. It affects it's happiness, violence and IQ. I also switched to `JetBrains-Idea-CE`.
 
 
